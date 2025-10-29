@@ -34,7 +34,6 @@ public class CalculatorUI extends JFrame implements ActionListener {
     // These 'final' variables are constants for our theme colors.
     private final Color windowBgColor = new Color(40, 40, 40);
     private final Color calculatorBodyColor = new Color(25, 25, 25);
-    // ... (rest of the color definitions) ...
     private final Color displayBgColor = new Color(50, 60, 50);
     private final Color displayTextColor = Color.WHITE;
     private final Color buttonBgColor = new Color(60, 60, 60);
@@ -209,15 +208,25 @@ public class CalculatorUI extends JFrame implements ActionListener {
             case "SHIFT": isShiftActive = !isShiftActive; break; // Toggle the SHIFT state.
             case "ALPHA": isAlphaActive = !isAlphaActive; break; // Toggle the ALPHA state.
             case "hyp": isHypActive = !isHypActive; break; // Toggle the HYP state.
-            case "RCL": isRclActive = true; break; // Set RCL state to true.
-            case "STO": isStoActive = true; break; // Set STO state to true.
+            
+            // --- THIS IS THE CORRECTED LOGIC ---
+            case "RCL":
+                if (isShiftActive) {
+                    isStoActive = true;    // Set STO mode to true
+                    isShiftActive = false; // Turn off SHIFT mode
+                } else {
+                    isRclActive = true;    // Set RCL mode to true
+                }
+                break;
+            // --- END OF CORRECTION ---
+                
             case "MODE":
                 // OOP Concept: Abstraction. We tell the engine to change its mode.
                 engine.setDegrees(!engine.isDegrees()); 
                 break;
             case "sin": handleFunction(getTrigFunction("sin")); break; // Handle 'sin' click.
             case "cos": handleFunction(getTrigFunction("cos")); break;
-            case "tan": handleFunction(getTrigFunction("tan")); break; // Removed the typo '*' here.
+            case "tan": handleFunction(getTrigFunction("tan")); break; 
             case "M+":
                 try { // We use 'try-catch' in case the math is bad (e.g., "5++").
                     // OOP Concept: Abstraction. Ask the engine to evaluate the text.
@@ -239,7 +248,7 @@ public class CalculatorUI extends JFrame implements ActionListener {
             case "(-)" : handleInput("(-"); break;
             default: // This handles all other buttons (numbers, operators, etc.)
                 if ("0123456789.+-*/()".contains(command)) {
-                     handleInput(command);
+                        handleInput(command);
                 }
                 break;
         }
@@ -335,4 +344,3 @@ public class CalculatorUI extends JFrame implements ActionListener {
         }
     }
 }
-
